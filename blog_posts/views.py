@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render, HttpResponseRedirect
+from . forms import CreatePostForm,UpdatePostForm
 from .models import Post
 
 
@@ -16,3 +17,37 @@ def detail(request, id):
         'post':post
     }
     return render(request, 'blog_posts/detail.html', context)
+
+def create(request):
+    if request.method == 'POST':
+        form = CreatePostForm(request.POST)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            return redirect('index')
+    else:
+        form = CreatePostForm()
+    context = {
+        'form':form,
+    }
+    return render(request, 'blog_posts/create.html', context)
+
+def update(request):
+    if request.method=='POST':
+        form = UpdatePostForm(request.POST,instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = UpdatePostForm(instance=request.user)
+    context = {
+        'form':form
+    }
+    return render(request,'blog_posts/update.html', context)
+
+def delete(request,id):
+    post = Post.objects.get(id=id)
+    if request.method =='POST':
+        post.delete()
+        return HttpResponseRedirect("/")
+    return render(request, 'blog_posts/delete.html', {'post':post})
