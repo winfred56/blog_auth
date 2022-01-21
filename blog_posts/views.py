@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, HttpResponseRedirect
-from . forms import CreatePostForm,UpdatePostForm
-from .models import Post
+from .forms import CreatePostForm, UpdatePostForm, CommentForm
+from .models import Post, Comment
 
 
 def index(request):
@@ -52,4 +52,24 @@ def delete(request,id):
     return render(request, 'blog_posts/delete.html', {'post':post})
 
 def comments(request,id):
-    return render(request,'blog_post/comments.html',context)
+    post = Post.objects.get(id=id)
+    comments = post.comments.all()
+    new_comment = None
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment_form.instance.author = request.user
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = post
+            new_comment.save()
+            print(new_comment)
+
+    else:
+        comment_form = CommentForm()
+    context = {
+        'form': comment_form,
+        'post': post,
+        'comments': comments
+
+    }
+    return render(request,'blog_posts/comments.html',context)
