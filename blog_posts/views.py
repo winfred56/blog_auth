@@ -32,16 +32,15 @@ def create(request):
     }
     return render(request, 'blog_posts/create.html', context)
 
-def update(request):
-    if request.method=='POST':
-        form = UpdatePostForm(request.POST,instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
-    else:
-        form = UpdatePostForm(instance=request.user)
+def update(request,id):
+    post = Post.objects.get(id=id)
+    form = UpdatePostForm(request.POST or None, instance = post)
+    if form.is_valid():
+       form.save()
+       return HttpResponseRedirect("/")
     context = {
-        'form':form
+        'form':form,
+        'post':post
     }
     return render(request,'blog_posts/update.html', context)
 
@@ -51,3 +50,6 @@ def delete(request,id):
         post.delete()
         return HttpResponseRedirect("/")
     return render(request, 'blog_posts/delete.html', {'post':post})
+
+def comments(request,id):
+    return render(request,'blog_post/comments.html',context)
