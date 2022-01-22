@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render, HttpResponseRedirect
 from .forms import CreatePostForm, UpdatePostForm, CommentForm, UpdateCommentForm
 from .models import Post, Comment
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -37,6 +38,8 @@ def detail(request, id):
     }
     return render(request, 'blog_posts/detail.html', context)
 
+
+@login_required
 def create(request):
     if request.method == 'POST':
         form = CreatePostForm(request.POST)
@@ -53,6 +56,8 @@ def create(request):
     }
     return render(request, 'blog_posts/create.html', context)
 
+
+@login_required
 def update(request,id):
     post = Post.objects.get(id=id)
     form = UpdatePostForm(request.POST or None, instance = post)
@@ -65,6 +70,8 @@ def update(request,id):
     }
     return render(request,'blog_posts/update.html', context)
 
+
+@login_required
 def delete(request,id):
     post = Post.objects.get(id=id)
     if request.method =='POST':
@@ -73,6 +80,7 @@ def delete(request,id):
     return render(request, 'blog_posts/delete.html', {'post':post})
 
 
+@login_required
 def update_comment(request,id):
     comment = Comment.objects.get(id=id)
     form = UpdateCommentForm(request.POST or None, instance = comment)
@@ -84,8 +92,9 @@ def update_comment(request,id):
     context= {'form':form}
     return render(request, 'blog_posts/update_comment.html', context)
 
-def delete_comment(request, id):
 
+@login_required
+def delete_comment(request, id):
     # Gets the id of the selected comment
     comment = Comment.objects.get(id=id) 
     if request.method == 'POST':

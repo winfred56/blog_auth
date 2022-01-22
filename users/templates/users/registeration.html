@@ -1,0 +1,14 @@
+
+<form method='POST'>
+    {% csrf_token %}
+    <fieldset>
+        <h2><legend>Register Today</legend></h2>
+        {{form.as_p}}
+    </fieldset>
+    <div>
+        <button type='submit'>Sign Up</button>
+    </div>
+</form>
+<div>
+    <small>Already have an account? <a href='{% url 'login' %}'>Login</a></small>
+</div>

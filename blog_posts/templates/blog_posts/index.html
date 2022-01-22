@@ -8,12 +8,16 @@
 </head>
 <body>
     <h1>Welcome</h1>
+    {% if user.is_authenticated %}
+    <small><a href='{% url 'logout' %}'>Logout</a></small>
+    {% else %}
+    <small><a href='{% url 'login' %}'>Login</a></small>
+    {% endif %}
     <a href='{% url 'create'  %}'>Create a Post</a></h5>
     {% for post in posts %}
     <h2>{{post.author}}</h2>
     <h4><a href='{% url 'detail' post.id %}'>{{post.title}}</a></h4>
     <p>{{post.content}}              {{post.date_posted}}</p>
-    
     {% endfor %}
 </body>
 </html>
