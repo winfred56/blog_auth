@@ -82,3 +82,11 @@ def update_comment(request,id):
         return HttpResponseRedirect("/")
     context= {'form':form}
     return render(request, 'blog_posts/update_comment.html', context)
+
+def delete_comment(request, id):
+    comment = Comment.objects.get(id=id)
+    if request.method == 'POST':
+        comment.delete()
+        return HttpResponseRedirect('/')
+    context = {'comment':comment}
+    return render(request, 'blog_posts/delete_comment.html', context)
