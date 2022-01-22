@@ -10,10 +10,10 @@
     <h1>Welcome</h1>
     <a href='{% url 'create'  %}'>Create a Post</a></h5>
     {% for post in posts %}
-    <h2><a href='{% url 'detail' post.id %}'>{{post.author}}</a></h2>
-    <h4>{{post.title}}</h4>
+    <h2>{{post.author}}</h2>
+    <h4><a href='{% url 'detail' post.id %}'>{{post.title}}</a></h4>
     <p>{{post.content}}              {{post.date_posted}}</p>
-    <h5><a href='{% url 'comment' post.id %}'>View Comments</a></h5>
+    
     {% endfor %}
 </body>
 </html>
