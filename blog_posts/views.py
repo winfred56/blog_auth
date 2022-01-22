@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, HttpResponseRedirect
-from .forms import CreatePostForm, UpdatePostForm, CommentForm
+from .forms import CreatePostForm, UpdatePostForm, CommentForm, UpdateCommentForm
 from .models import Post, Comment
 
 
@@ -62,7 +62,7 @@ def comments(request,id):
             new_comment = comment_form.save(commit=False)
             new_comment.post = post
             new_comment.save()
-            print(new_comment)
+            comment_form  = CommentForm()
 
     else:
         comment_form = CommentForm()
@@ -73,3 +73,12 @@ def comments(request,id):
 
     }
     return render(request,'blog_posts/comments.html',context)
+
+def update_comment(request,id):
+    comment = Comment.objects.get(id=id)
+    form = UpdateCommentForm(request.POST or None, instance = comment)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect("/")
+    context= {'form':form}
+    return render(request, 'blog_posts/update_comment.html', context)

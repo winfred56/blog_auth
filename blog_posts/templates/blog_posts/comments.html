@@ -27,6 +27,9 @@
     {% for comment in comments %}
         <h5>{{comment.author}}</h5>
         <p>{{comment.content}}</p>
+        {% if request.user == comment.author %}
+        <a href='{% url 'update_comment' comment.id %}'>edit comment</a>
+        {% endif %}
     {% endfor %}
     {% endif %}
 </body>
