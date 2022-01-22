@@ -48,7 +48,7 @@ def create(request):
             form.instance.author = request.user
             form.save()
             #returns to the post's detail
-            return redirect('f/posts/{post.id}')
+            return redirect('index')
     else:
         form = CreatePostForm()
     context = {
